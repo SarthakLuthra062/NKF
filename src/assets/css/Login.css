@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Coda+Caption:wght@800&family=Skranji&display=swap');
+
+body{
+  margin: 0;
+  font-family: 'Skranji';
+  font-weight: 600;
+}
+
+.loginbg{
+    height: 65vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .box{
+    width: 800px;
+    height: 500px;
+    display:flex;
+    flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  backdrop-filter: blur(43px);
+  opacity: .99;
+  background-color:rgb(255 255 255 / 64%);
+  box-shadow: 0 1px 0px 0px rgb(0 0 0 / 12%), 0px 0px 0px rgb(0 0 0 / 24%);
+  
+  }
+  
+  h1{
+    -webkit-text-stroke: 1px rgb(255, 255, 255);
+    color: #FF5F00;
+    font-size: 55px;
+    font-family: 'Skranji';
+    text-shadow: 0px 1px 4px #00000091;
+    font-weight: 700;
+    padding-bottom: 40px;
+  }
+  
+  .loginbtn{
+    padding: 50px 0;
+  }
+  
+  .custombtn{
+    width: 225px;
+  }
+  
+  
+  .select-style select:focus {
+    outline: none;
+  }
+  
+  .select-style{
+    width:600px;
+    overflow: hidden;
+    height: 70px;
+    border: 2px solid #C24800;
+    box-shadow:0 1px 13px 3px rgb(0 0 0 / 12%), 0px 0px 0px rgb(0 0 0 / 24%);
+    border-radius: 15px;
+    background-color: #ffff;
+    position:relative;
+  
+  
+  }
+  
+  .select-style select {
+    padding: 14px 20px;
+    width: 100%;
+    font-family: 'Skranji';
+    font-weight: 600;
+    color: #C24800;
+    border: none;
+    font-size: 25px;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+  }
+  
+  .dropdownicon{
+  
+    position: absolute;
+    right: 120px;
+    font-size: 40px;
+    color: #C24800;
+    margin-top: -95px;
+  
+  
+  }
+  
+  
+  @media(max-width:1200px){
+    .box{
+      width: 100%;
+      height: auto;
+      margin: 10px;
+      padding: 15px;
+    }
+  
+    h1{
+      font-size: 28px;
+        margin-bottom: 25px;
+    }
+  
+    .loginbtn {
+      padding:25px 0;
+  }
+  
+    .select-style{
+      width: 100%;
+      height: auto;
+    }
+  
+    .select-style select{
+      font-size: 17px;
+    }
+  
+    .dropdownicon{right: 40px;
+    font-size: 30px;
+    color: #C24800;
+    margin-top: -50px;
+    }
+    
+    .heading-section .menu-factory{
+      padding-left: 0;
+      margin-bottom: 0;
+      margin-top: 20px;
+    }
+    .custom-btn{
+      padding: 10px 25px !important;
+      font-size: 12px !important;
+    }
+    ul.menu-factory li{
+      width: 240px !important;
+       border-radius: 12px;
+    }
+  
+    ul.menu-factory li span{
+      font-size: 30px !important;
+    }
+  
+  }
+  
+  @media(max-width:280px){
+    h1 {
+      font-size: 21px;
+      margin-bottom: 25px;
+  }
+  
+  .select-style select {
+    font-size: 13px;
+  }
+  .dropdownicon {
+    right: 31px;
+    font-size: 20px;
+    margin-top: -66px;
+  }
+  ul.menu-factory li{
+    width: 240px !important;
+     border-radius: 12px;
+  }
+  
+  
+  }    
+  

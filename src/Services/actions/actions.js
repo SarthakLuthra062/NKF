@@ -1,0 +1,5 @@
+const INSERT_DROPDOWN_DATA = 'INSERT_DROPDOWN_DATA'
+
+module.exports = {
+    INSERT_DROPDOWN_DATA
+}
