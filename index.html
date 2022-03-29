@@ -109,11 +109,9 @@
                         To continue please select an option
                     </div>
                     <br>
-                    <div class="dropdown wallet_dropdown">
-                        <input id="api_dropdown" class="api_dropbtn" type="button" value="RPC Endpoints Available <>">
-                        <div id="api_dropdown" class="dropdown-content">
-                            <input class="api-buttons" style="margin-top: 10px;" type="button" value="https://chain.wax.io"
-                                onclick="select_api('chain.wax.io')">
+                    <div class="dropdown wallet_dropdown set_width">
+                        <input id="api_dropdown" class="api_dropbtn" type="button" value="RPC Endpoints Available <>" onclick="show_api();">
+                        <div id="api_dropdown_content" class="dropdown-content">
                             <input class="api-buttons" style="margin-top: 5px;" type="button" value="https://wax.pink.gg"
                                 onclick="select_api('wax.pink.gg')">
                             <input class="api-buttons" style="margin-top: 5px;" type="button" value="https://wax.eosphere.io"
@@ -131,8 +129,8 @@
                     <div id="bank-child" class="bank_flex">
                         <input class="bank-header" id="bank-header" type="button" value="NIFTY KICKS BANK">
                         <div class="dropdown">
-                            <button id="bank_dropdown" class="dropbtn" onclick="dropdown_content();">Select Token Type</button>
-                            <div id="bank-dropdown" class="dropdown-content">
+                            <input id="bank_dropdown" class="dropbtn" type="button" onclick="dropdown_content();" value="Select Token Type">
+                            <div id="bank-dropdown_content" class="dropdown-content">
                                 <input class="api-buttons" style="margin-top: 10px;width: 98%;" type="button" value="NKFE"
                                     onclick="bank_select('NKFE')">
                                 <input class="api-buttons" style="margin-top: 5px;width: 98%;" type="button" value="NKFL"

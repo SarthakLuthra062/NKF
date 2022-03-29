@@ -484,6 +484,7 @@ html {
         border: 1px solid white;
         cursor: pointer;
         border-radius: 5px;
+        width: 100%;
       }
 
       .api_dropbtn {
@@ -505,6 +506,11 @@ html {
       .dropdown {
         position: relative;
         display: inline-block;
+        width: 30%;
+      }
+
+      .set_width{
+          width: 70%;
       }
 
       .crdropdown-content {
@@ -635,6 +641,23 @@ html {
     }
 
     .itemwrapper_2 {
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        align-items: center;
+        align-content: center;
+        height: 100%;
+        width: 385px;
+        font: 16px/26px Georgia, Garamond, Serif;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        gap: 8px;
+    }
+
+    .itemwrapper_3 {
         margin-top: 5px;
         margin-bottom: 10px;
         border-radius: 8px;
@@ -967,6 +990,19 @@ html {
         gap: 5px;
     }
 
+    .bar_type3 {
+        margin-top: 5px;
+        width: 100%;
+        height: 40px;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        align-content: center;
+        gap: 5px;
+    }
+
     .stkbtn-bar {
         margin-top: auto;
         width: 100%;
@@ -993,6 +1029,20 @@ html {
       }
 
     .stkbtn{
+        background: url("./assets/button.png");
+        width: 150px;
+        height: 100%;
+        color: white;
+        font-family: Oswald;
+        font-size: 16px;
+        font-weight:500px;
+        text-transform: uppercase;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        border: none;
+    }
+
+    .stkbtnclaim{
         background: url("./assets/button.png");
         width: 150px;
         height: 100%;
@@ -1516,9 +1566,6 @@ html {
         margin-right: 20px;
     }
 
-    .tablecontainer_type3 {
-        
-    }
 
     #tablecontainer_type2 {
         margin-left: 10px;
@@ -1534,9 +1581,19 @@ html {
         justify-content: center;
         align-items: center;
         width: 80vw;
+        height: 100%;
     }
 
     .itemwrapper_2 {
+        align-items: center;
+        width: 80vw;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .itemwrapper_3 {
         align-items: center;
         width: 80vw;
         flex-direction: row;
@@ -1621,6 +1678,7 @@ html {
         width: 90%;
         height: 45px;
     }
+    
 
     .sidebar{
         margin-left: 0px;
@@ -1870,6 +1928,10 @@ html {
         width: 88%;
     }
 
+    .set_width{
+        width: 90%;
+    }
+
     .slider {
         width: 80%;
         height: 15px;
@@ -1946,6 +2008,7 @@ html {
     width: 240px !important;
      border-radius: 12px;
   }
+
 }    
   
 
