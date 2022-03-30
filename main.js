@@ -35,6 +35,7 @@ let main_view_type = 'Factory Building';
 let craft_index = 'true';
 let deposit_index = 'true';
 var bank_input = document.getElementById("bank_input");
+var deposit_input = document.getElementById("sliderRangeText");
 var final_amt = document.getElementById("final_amt");
 var fees = document.getElementById("fees");
 fees.value = "BANK FEES : " + "7%";
@@ -466,6 +467,7 @@ async function deposit(asset_id, quantity) {
   if (loggedIn) {
     HideMessage();
     try {
+      console.log(quantity);
       var data1 = {
         player: wallet_userAccount,
         asset_id: asset_id,
@@ -1531,7 +1533,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
             var div7 = document.createElement('div');
             div7.id = 'textstyle';
             var txt = unstaked[index].token_in.includes("X") ? "" : '\n' + unstaked[index].token_in;
-            div7.textContent = "Power : + " + parseFloat(unstaked[index].power.split(' ')[0]).toFixed(0).toString() + " " + unstaked[index].power.split(' ')[1];
+            div7.textContent = "Production : + " + parseFloat(unstaked[index].power.split(' ')[0]).toFixed(0).toString() + " " + unstaked[index].power.split(' ')[1];
             div7.className = 'textstyle textstyle15';
 
             var power_prod_bar = document.createElement('div');
@@ -1540,7 +1542,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
 
             var text_div = document.createElement('div');
             var txt = unstaked[index].token_in.includes("X") ? "" : '\n' + unstaked[index].token_in;
-            text_div.textContent = "Production : " + parseFloat(txt.split(' ')[0]).toFixed(0).toString() + " " + txt.split(' ')[1] + " / H";
+            text_div.textContent = "Consumption : " + parseFloat(txt.split(' ')[0]).toFixed(0).toString() + " " + txt.split(' ')[1] + " / H";
             text_div.className = 'textstyle textstyle15';
             //text_div.style = "margin-bottom:-5px;";
 
@@ -1706,6 +1708,20 @@ function switchtodiffcoll(index) {
   }
 }
 
+deposit_input.oninput = function () {
+  var input = parseFloat(this.value).toFixed(4) + " NKFE";
+  var depositmchbtn = document.getElementById('depositmchbtn');
+  var withdrawbtn = document.getElementById('withdrawmchbtn');
+  var asset_id = document.getElementById('dmchid').value.split('#')[1];
+  depositmchbtn.onclick =
+        async function () {
+          deposit(asset_id, input);
+        }
+      withdrawbtn.onclick = async function () {
+        withdraw_tokens(input,asset_id);
+      }
+}
+
 bank_input.oninput = function () {
   console.log(this.value);
   var input = parseFloat(this.value).toFixed(4);
@@ -1811,52 +1827,60 @@ async function switch_to_bank() {
 
 
 async function switch_to_deposit(asset_id, max) {
-
-  var rangeslider = document.getElementById("sliderRange");
-  var output = document.getElementById("demo");
-  output.innerHTML = parseFloat(rangeslider.value).toFixed(4);
-  rangeslider.max = max;
-  rangeslider.oninput = function () {
-    output.innerHTML = parseFloat(this.value).toFixed(4) + " NKFE";
-  }
-  if (deposit_index == 'true') {
-    document.getElementById('depositmch').style.visibility = "visible";
-    document.getElementById('depositmch-child').style.visibility = "visible";
-    document.getElementById('depositmch-header').style.display = "block";
-    var element = document.getElementById('depositmch-child');
-    var children = element.children;
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
-      child.style.visibility = "visible";
-    }
-    var element = document.getElementById('dmchid');
-    element.value = "Machine Asset ID : #" + asset_id;
-    var depositmchbtn = document.getElementById('depositmchbtn');
-    var withdrawbtn = document.getElementById('withdrawmchbtn');
-    depositmchbtn.onclick =
-      async function () {
-        var output = document.getElementById("demo").innerHTML + " NKFE";
-        deposit(asset_id, output);
+  var output = parseFloat(deposit_input.value).toFixed(4) + " NKFE";
+  console.log(output);
+  if(typeof(max) != 'undefined')
+    ShowToast("FYI Max Storage Value on this machine is " + max + " NKFE");
+  if(parseFloat(output.value) > parseFloat(max))
+    ShowToast("Value greater than machines max storage value");
+  else{
+    if (deposit_index == 'true') {
+      document.getElementById('depositmch').style.visibility = "visible";
+      document.getElementById('depositmch-child').style.visibility = "visible";
+      document.getElementById('depositmch-header').style.display = "block";
+      var element = document.getElementById('depositmch-child');
+      var children = element.children;
+      for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        child.style.visibility = "visible";
       }
-    withdrawbtn.onclick = async function () {
-      var output = document.getElementById("demo").innerHTML + " NKFE";
-      withdraw_tokens(output,asset_id);
+      var element = document.getElementById('dmchid');
+      element.value = "Machine Asset ID : #" + asset_id;
+      var depositmchbtn = document.getElementById('depositmchbtn');
+      var withdrawbtn = document.getElementById('withdrawmchbtn');
+      depositmchbtn.onclick =
+        async function () {
+          var amount = output;
+          console.log(output);
+          console.log(amount);
+          deposit(asset_id, amount);
+        }
+      withdrawbtn.onclick = async function () {
+        var amount = output;
+        withdraw_tokens(amount,asset_id);
+      }
+  
+      deposit_index = 'false';
+    } else if (deposit_index == 'false') {
+      document.getElementById('depositmch').style.visibility = "hidden";
+      document.getElementById('depositmch-child').style.visibility = "hidden";
+      document.getElementById('depositmch-header').style.display = "none";
+      var element = document.getElementById('depositmch-child');
+  
+      var children = element.children;
+      for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        child.style.visibility = "hidden";
+      }
+      deposit_index = 'true';
     }
-
-    deposit_index = 'false';
-  } else if (deposit_index == 'false') {
-    document.getElementById('depositmch').style.visibility = "hidden";
-    document.getElementById('depositmch-child').style.visibility = "hidden";
-    document.getElementById('depositmch-header').style.display = "none";
-    var element = document.getElementById('depositmch-child');
-
-    var children = element.children;
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
-      child.style.visibility = "hidden";
-    }
-    deposit_index = 'true';
   }
+  /*var output = document.getElementById("demo");
+  output.innerHTML = parseFloat(rangeslider.value).toFixed(4);
+  rangeslider.max = max;*/
+  /*rangeslider.oninput = function () {
+    output.innerHTML = parseFloat(this.value).toFixed(4) + " NKFE";
+  }*/
 }
 async function populate_lpanel(asset_idd, name, labourerz, rarity) {
 
