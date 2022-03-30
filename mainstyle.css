@@ -391,7 +391,7 @@ html {
         font-size: 24px;
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
-        width: 100%;
+        width: 90%;
     }
 
     #walletlist {
@@ -403,12 +403,12 @@ html {
         border-radius: 8px;
         white-space: nowrap;
         background-color: rgba(0, 0, 0,0.5);
-        padding: 16px;
         text-shadow: 1px 1px 2px #c0c0c0;
-        display: inline-block;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        gap:5px;
     }
 
     .slidecontainer {
@@ -585,7 +585,7 @@ html {
       .dropdown-content a:hover {background-color: #f1f1f1}
       
       .dropdown:hover .dropdown-content {
-        display: block;
+        
       }
       
       .dropdown:hover .dropbtn {
@@ -929,8 +929,7 @@ html {
 
     .anchor,.wcw {
         border: 0.2px solid white;
-        margin-top: 10px;
-        width: 70%;
+        width: 60%;
         border-radius: 8px;
     }
 
@@ -1681,7 +1680,6 @@ html {
 
     .anchor,.wcw {
         border: 0.2px solid white;
-        margin-top: 10px;
         width: 90%;
         border-radius: 8px;
     }
@@ -1757,12 +1755,14 @@ html {
     }
 
     .factory_img{
-        width: 65vw;
+        width: 55vw;
         height: 20vh;
     }
 
     .stkbtn-bar {
-        width: 100%;
+        margin-left: 5px;
+        margin-right: 5px;
+        width: 95%;
         height:50px;
         gap:10px;
     }
@@ -1900,9 +1900,9 @@ html {
     }
 
     .bank{
-        bottom: 0px;
+        bottom: 10vh;
         width: 90%;
-        height: 61vh;
+        height: 65vh;
     }
 
     .bank_child{
