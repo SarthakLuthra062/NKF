@@ -46,12 +46,12 @@
     <div class="header-container">
         <div class="main-content">
             <div class="sidebar" id="sidebar" style="visibility: hidden;">
-                <input class="sidebar-buttons" type="button" value="STAKED" onclick="switchstaked(true)">
-                <input class="sidebar-buttons" type="button" value="UNSTAKED" onclick="switchstaked(false)">
-                <input class="sidebar-buttons" type="button" value="CRAFT" onclick="">
+                <button class="sidebar-buttons" onclick="switchstaked(true)"><label style="display: block;">STAKED</label></button>
+                <button class="sidebar-buttons" onclick="switchstaked(false)"><label style="display: block;">UNSTAKED</label></button>
+                <button class="sidebar-buttons" onclick="switch_to_bank()"><label style="display: block;">CRAFT</label></button>
             </div>
             <div class="sidebar-right" id="sidebar-right" style="visibility: hidden;">
-                <input class="sidebar-buttons" type="button" onclick="switch_to_bank()" value="BANK">
+                <button class="sidebar-buttons" onclick="switch_to_bank()"><label style="display: block;">BANK</label></button>
                 <a class="sidebar-buttons" href="https://neftyblocks.com/c/niftykicksio" target="_blank"><label style="display: block;margin-top: 1.2vh;">MARKETPLACE</label></a>
                 <a class="sidebar-buttons" href="https://wax.atomichub.io/market?collection_name=niftykicksio&order=desc&sort=created&symbol=WAX" target="_blank"><label style="display: block;margin-top: 1.2vh;">ATOMICHUB</label></a>
             </div>
