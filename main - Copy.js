@@ -1,4 +1,4 @@
-let endpoint = "https://wax.greymass.com";
+let endpoint = "https://chain.wax.io";
 const wax = new waxjs.WaxJS({
   rpcEndpoint: endpoint,
   tryAutoLogin: false
@@ -15,7 +15,6 @@ const dapp = "NiftyKicks";
 const tokenContract = "nkfactorytkn";
 const labourer_schema = "skilledlabor";
 var t = 0;
-let staked_lbr = [];
 
 var anchorAuth = "owner";
 main();
@@ -42,7 +41,6 @@ var selected_token_bank = "NKFE";
 var wax_balance_static = [];
 var user_balance_static = [];
 var allintervals = {};
-var interval_ids = []
 var start_timer = false;
 var reg_dereg = false;
 var dropdown_clicked = false;
@@ -53,15 +51,12 @@ async function main() {
     autoLogin();
   else {
 
-    clearUi();
     loader.display = "block";
     lvlloader.display = "none";
 
     ratespromise = GetFctryData();
     rates = await ratespromise;
     document.getElementById("loadingText").value = "Loading Factory Data ...";
-
-    staked_lbrs = await GetStakedLbrData();
 
     boostpromise = GetBoostData();
     boostdata = await boostpromise;
@@ -77,12 +72,11 @@ async function main() {
     assets = await assetPromise;
     document.getElementById("loadingText").value = "Loading Asset Data ...";
 
-    lbrPromise = GetLbrers(collection, boostdata, staked_lbrs);
+    lbrPromise = GetLbrers(collection, boostdata);
     labourers = await lbrPromise;
     console.log("asset " + new Date().toUTCString());
     console.log(labourers);
     document.getElementById("loadingText").value = "Loading Labourer Data ...";
-
     stakepromise = FilterStaked(assets);
     staked = await stakepromise;
     console.log(staked);
@@ -102,7 +96,7 @@ async function main() {
     unstaked = FilterUnstaked(assets, staked);
 
     document.getElementById("loadingText").value = "Setting UI ...";
-    !reg_dereg ? PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance) : "";
+    !reg_dereg ? PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance):"";
 
     canclick = true;
     console.log("ui " + new Date().toUTCString());
@@ -146,7 +140,7 @@ async function stakeall() {
           player: wallet_userAccount,
         },
       }, ]);
-      await main();
+      main();
       ShowToast("All Assets Staked Successfully !");
     } catch (e) {
       console.log(e);
@@ -178,7 +172,7 @@ async function stakeasset(assetId) {
           asset_ids: [assetId]
         },
       }, ]);
-      await main();
+      main();
       ShowToast("All Assets Staked Successfully !");
     } catch (e) {
       ShowToast(e.message);
@@ -219,7 +213,7 @@ async function assetunstake(assetId) {
         }],
         data: data1,
       }, ]);
-      await main();
+      main();
       ShowToast("Asset Unstaked Successfully");
     } catch (e) {
       ShowToast(e.message);
@@ -251,7 +245,9 @@ async function deregmch(asset_id) {
         data: data1,
       }, ]);
       ShowToast("Asset staked Successfully!");
-      await main();
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -281,7 +277,9 @@ async function regmch(asset_id) {
         data: data1,
       }, ]);
       ShowToast("Asset staked Successfully!");
-      await main();
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -310,7 +308,9 @@ async function claimfctry(asset_id) {
         data: data1,
       }, ]);
       ShowToast("Tokens Claimed Successfully !");
-      await main();
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -341,8 +341,7 @@ async function regboost(asset_id, mch_id) {
         data: data1,
       }, ]);
       ShowToast("Boost registered Successfully !");
-      switch_to_labourers();
-      await main();
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -373,7 +372,7 @@ async function deregboost(asset_id) {
         data: data1,
       }, ]);
       ShowToast("Boost deregistered Successfully !");
-      await main();
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -405,17 +404,9 @@ async function withdraw_tokens(quantity, asset_id) {
         data: data1,
       }, ]);
       ShowToast("Tokens Withdrawn Successfully !");
-      if(bank_index == "false")
-      {
-        switch_to_bank();
-        await main();
-        switch_to_bank();
-      }
-      else{
-        switch_to_deposit();
-        await main();
-      }
-      bank_select(document.getElementById("bank_dropdown").value);
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -449,10 +440,9 @@ async function deposit_tokens(quantity) {
         data: data1,
       }, ]);
       ShowToast("Tokens Deposited Successfully !");
-      switch_to_bank();
-      await main();
-      switch_to_bank();
-      bank_select(document.getElementById("bank_dropdown").value);
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -464,8 +454,11 @@ async function deposit_tokens(quantity) {
 
 async function deposit(asset_id, quantity) {
   if (loggedIn) {
+
     HideMessage();
+
     try {
+
       var data1 = {
         player: wallet_userAccount,
         asset_id: asset_id,
@@ -481,8 +474,9 @@ async function deposit(asset_id, quantity) {
         data: data1,
       }, ]);
       ShowToast("Tokens Deposited Successfully !");
-      switch_to_deposit();
-      await main();
+      balancepromise = GetGBalance();
+      balance = await balancepromise;
+      main();
     } catch (e) {
       ShowToast(e.message);
     }
@@ -536,9 +530,7 @@ async function FilterStaked(assets) {
     for (let i = 0; i < body.rows.length; i++) {
       var data = body.rows[i];
       for (let i = 0; i < assets.length; i++) {
-        if (data.asset_id == assets[i].asset_id && data.owner == wallet_userAccount) {
-          if (data.labourer_id != "0")
-            staked_lbr.push(data.labourer_id);
+        if (data.asset_id == assets[i].asset_id && data.owner == wallet_userAccount)
           results.push({
             asset_id: data.asset_id,
             name: assets[i].name,
@@ -556,10 +548,9 @@ async function FilterStaked(assets) {
             badge: data.badge,
             craft_id: data.craft_id,
             img: assets[i].img,
-            rarity_type: assets[i].rarity_type,
-            material_type: assets[i].material_type
+            rarity_type : assets[i].rarity_type,
+            material_type : assets[i].material_type
           });
-        }
       }
     }
   }
@@ -571,25 +562,22 @@ function restartTimer() {
 
 }
 
-async function GetLbrers(colc, rates, staked_lbrs) {
+async function GetLbrers(colc, rates) {
   let results = [];
   var path = "atomicassets/v1/assets?collection_name=" + colc + "&schema_name=" + labourer_schema + "&owner=" + wallet_userAccount + "&page=1&limit=1000&order=desc&sort=asset_id";
-  const response = await fetch("https://wax-aa.eu.eosamsterdam.net/" + path, {
+  const response = await fetch("https://" + "wax.api.atomicassets.io/" + path, {
     headers: {
       "Content-Type": "text/plain"
     },
     method: "POST",
   });
-  console.log(staked_lbrs);
+  console.log(rates);
   const body = await response.json();
   console.log(body.data);
   for (i = 0; i < body.data.length; i++) {
     var data = body.data[i];
     for (n = 0; n < rates.length; n++) {
       if (data.template.template_id == rates[n].template_id) {
-        let status = false;
-        if (staked_lbrs.includes(data.asset_id))
-          status = true;
         results.push({
           asset_id: data.asset_id,
           img: data.data.img,
@@ -597,8 +585,7 @@ async function GetLbrers(colc, rates, staked_lbrs) {
           machines: rates[n].machines,
           type: rates[n].type,
           boostdata: rates[n].boostdata,
-          rarity: typeof (data.data.rarity) != 'undefined' ? data.data.rarity : "",
-          staked: status
+          rarity: typeof(data.data.rarity) != 'undefined' ? data.data.rarity : ""
         });
       }
     }
@@ -611,7 +598,7 @@ async function GetLbrers(colc, rates, staked_lbrs) {
 async function GetAssets(colc, rates) {
   let results = [];
   var path = "atomicassets/v1/assets?collection_name=" + colc + "&owner=" + wallet_userAccount + "&page=1&limit=1000&order=desc&sort=asset_id";
-  const response = await fetch("https://wax-aa.eu.eosamsterdam.net/" + path, {
+  const response = await fetch("https://" + "wax.api.atomicassets.io/" + path, {
     headers: {
       "Content-Type": "text/plain"
     },
@@ -630,9 +617,9 @@ async function GetAssets(colc, rates) {
           name: data.name,
           maxstorage: maxstorage,
           rarity: rarity,
-          rarity_type: typeof (data.data.rarity) != 'undefined' ? data.data.rarity : "",
+          rarity_type: typeof(data.data.rarity) != 'undefined' ? data.data.rarity : "",
           schema: data.schema.schema_name,
-          material_type: typeof (data.data.material) != 'undefined' ? data.data.material : "",
+          material_type: typeof(data.data.material) != 'undefined' ? data.data.material : "", 
         });
       }
     }
@@ -711,42 +698,6 @@ async function GetBoostData() {
   }
   console.log(rates);
   return rates;
-}
-
-async function GetStakedLbrData() {
-  var path = "/v1/chain/get_table_rows";
-
-  var data = JSON.stringify({
-    json: true,
-    code: contract,
-    scope: contract,
-    table: "boosts",
-    key_type: `i64`,
-    index_position: 2,
-    lower_bound: eosjsName.nameToUint64(wallet_userAccount),
-    upper_bound: eosjsName.nameToUint64(wallet_userAccount),
-    limit: 2000
-  });
-
-  const response = await fetch(endpoint + path, {
-    headers: {
-      "Content-Type": "text/plain"
-    },
-    body: data,
-    method: "POST",
-  });
-
-  var lbr_data = [];
-  const body = await response.json();
-  console.log(body);
-
-  if (body.rows.length != 0) {
-    for (const bdata of body.rows) {
-      if (bdata.owner == wallet_userAccount)
-        lbr_data.push(bdata.asset_id);
-    }
-  }
-  return lbr_data;
 }
 
 async function GetGBalance() {
@@ -885,44 +836,39 @@ async function GetCraftData() {
 }
 
 function startTimer(duration, index) {
-  var timer = duration, minutes, seconds;
-  var new_interval = setInterval(function () {
-      hours=  parseInt(timer / 3600, 10)
-      minutes = parseInt((timer-hours*3600) / 60,10);
+    var timer = duration,
+      minutes, seconds;
+    clearInterval(allintervals[index]);
+    allintervals[index] = setInterval(function () {
+      hours = parseInt(timer / 3600, 10)
+      minutes = parseInt((timer - hours * 3600) / 60, 10);
       seconds = parseInt(timer % 60, 10);
 
       hours = hours < 10 ? "0" + hours : hours;
 
       minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds; 
-      display= hours+":"+minutes+":"+seconds;
-      if(display == "00:00:00")
-        display = "Claim Now !";
-      if (document.getElementById(index) != 'undefined' || document.getElementById(index) != 'null')
-        document.getElementById(index).innerHTML="Time to claim : " + display;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      display = hours + " : " + minutes + " : " + seconds;
+      if (display == "00 : 00 : 00") display = "Claim Now !";
+      document.getElementById(index).textContent = "Time to claim : " + display;
       if (--timer < 0) {
-          timer =0;
+        timer = 0;
       }
-  }, 1000);
-  interval_ids.push(new_interval);
+    }, 1000);
 }
 
-async function PopulateFactory(data, labourers) {
+async function PopulateFactory(data,labourers){
 
   clearUi();
-  for(let i = 0;i < interval_ids ; i++){
-    window.clearInterval(i);
-  }
-  console.log(interval_ids);
   reg_dereg = true;
   scrolldiv.style.justifyContent = "center";
   var items = document.createElement('div');
   var div = document.createElement('div');
 
-  if (data.labourer_id != "0") {
+  if(data.labourer_id != "0"){
 
     div.id = "tablecontainer_type3";
-    items.className = "itemwrapper_3";
+    items.className = "itemwrapper_2";
 
     let div_container_1 = document.createElement('div');
     div_container_1.className = "flex-container";
@@ -941,8 +887,8 @@ async function PopulateFactory(data, labourers) {
     title_bar.className = "bar";
     title_bar.style = "margin-left:0px;justify-content:flex-start;";
 
-    for (const labouerData of labourers) {
-      if (labouerData.asset_id == data.labourer_id) {
+    for(const labouerData of labourers){
+      if(labouerData.asset_id == data.labourer_id){
 
         console.log(labouerData);
         var div3_2 = document.createElement('div');
@@ -950,12 +896,12 @@ async function PopulateFactory(data, labourers) {
         div3_2.id = 'textstyle';
         div3_2.style = "font-size:12px;color:#D9490D;";
         div3_2.textContent = labouerData.rarity;
-
+      
         var div3 = document.createElement('div');
         div3.className = 'textstyle textstyle16';
         div3.id = 'textstyle';
         div3.textContent = labouerData.name;
-
+        
         title_bar.appendChild(div3_2);
         title_bar.appendChild(div3);
         div_container_1.appendChild(title_bar);
@@ -976,7 +922,7 @@ async function PopulateFactory(data, labourers) {
     text_div.style = "display:flex;flex-direction:colum;justify-content:center;align-items:center;width:100%;height:50px;background:black;border-radius:8px;";
     var timer_div = document.createElement('p');
     timer_div.disabled = "disabled";
-    timer_div.id = "timer 2" + data.asset_id;
+    timer_div.id = "timer " + data.asset_id;
     timer_div.textContent = "Time to claim : 00 : 00 : 00";
     timer_div.className = 'textstyle textstyle15';
     text_div.appendChild(timer_div);
@@ -991,7 +937,7 @@ async function PopulateFactory(data, labourers) {
     close_div.className = "dot dot-btn";
     close_div.style = "background-color: white;border:none;";
     close_div.textContent = "X";
-    close_div.onclick = async function () {
+    close_div.onclick = async function() {
       await clearUi();
       PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance);
     };
@@ -1020,7 +966,7 @@ async function PopulateFactory(data, labourers) {
     var title_bar_2 = document.createElement('div');
     title_bar_2.className = "bar";
     title_bar_2.style = "margin-left:0px;justify-content:center;";
-
+    
     title_bar_2.appendChild(div4_2);
     title_bar_2.appendChild(div4);
     div_container_2.appendChild(title_bar_2);
@@ -1037,7 +983,7 @@ async function PopulateFactory(data, labourers) {
     div6.id = 'textstyle';
     div6.style = "font-size:13px";
     var txt = data.token_in.includes("X") ? "" : "-" + data.token_in;
-    div6.textContent = "Power : + " + parseFloat(data.power.split(' ')[0]).toFixed(0).toString() + " " + data.power.split(' ')[1] + txt + " / H";
+    div6.textContent = "Power : + " + parseFloat(data.power.split(' ')[0]).toFixed(0).toString() +  " " + data.power.split(' ')[1]+ txt + " / H";
     div6.className = 'fontSize13';
 
     //storage_div.appendChild(div5);
@@ -1057,7 +1003,7 @@ async function PopulateFactory(data, labourers) {
     claimbtn.className = "stkbtn";
     claimbtn.style.bottom = "5px";
     claimbtn.textContent = "Claim";
-    claimbtn.onclick = async function s() {
+    claimbtn.onclick = async function s(){
       claimfctry(claimbtn.id);
     };
     var bar_2 = document.createElement('div');
@@ -1092,7 +1038,9 @@ async function PopulateFactory(data, labourers) {
     items.appendChild(div_container_1);
     items.appendChild(div_container_2);
 
-  } else {
+  }
+
+  else{
 
     div.id = "tablecontainer";
     items.className = "itemwrapper";
@@ -1105,7 +1053,7 @@ async function PopulateFactory(data, labourers) {
     close_div.className = "dot dot-btn";
     close_div.style = "background-color: white;border:none;margin-right:20px;";
     close_div.textContent = "X";
-    close_div.onclick = async function () {
+    close_div.onclick = async function() {
       await clearUi();
       PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance);
     };
@@ -1134,7 +1082,7 @@ async function PopulateFactory(data, labourers) {
     var title_bar_2 = document.createElement('div');
     title_bar_2.className = "bar_type2";
     title_bar_2.style = "margin-left:0px;justify-content:center;";
-
+    
     title_bar_2.appendChild(div4_2);
     title_bar_2.appendChild(div4);
     items.appendChild(title_bar_2);
@@ -1154,7 +1102,7 @@ async function PopulateFactory(data, labourers) {
     var div6 = document.createElement('div');
     div6.id = 'textstyle textstyle15';
     var txt = data.token_in.includes("X") ? "" : "-" + data.token_in;
-    div6.textContent = "Power : + " + parseFloat(data.power.split(' ')[0]).toFixed(0).toString() + txt + " / H";
+    div6.textContent = "Power : + " + data.power + txt + " / H";
     div6.className = 'textstyle';
 
     storage_div.appendChild(div5);
@@ -1183,20 +1131,21 @@ async function PopulateFactory(data, labourers) {
 
     let claimbtn = document.createElement('BUTTON');
     claimbtn.id = data.asset_id;
-    claimbtn.className = "stkbtnclaim";
+    claimbtn.className = "stkbtn";
     claimbtn.style.bottom = "5px";
     claimbtn.textContent = "Claim";
-    claimbtn.onclick = async function s() {
+    claimbtn.onclick = async function s(){
       claimfctry(claimbtn.id);
     };
 
     var bar_2 = document.createElement('div');
-    bar_2.className = "bar_type3";
+    bar_2.className = "bar_type2";
     bar_2.appendChild(claimbtn);
     items.appendChild(bar_2);
 
     var bar_5 = document.createElement('div');
     bar_5.className = "bar_type2";
+    bar_5.style = "justify-content:center;height:50px;margin-top:10px;";
 
     var labourer_div = document.createElement('div');
     labourer_div.className = "labourer_div";
@@ -1231,15 +1180,13 @@ async function PopulateFactory(data, labourers) {
   div.appendChild(items);
   scrolldiv.appendChild(div);
   mainDiv.style.visibility = "visible";
-  start_timer = true;
 }
 
 
 function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance) {
 
   clearUi();
-  console.log(interval_ids);
-  console.log(staked_lbr);
+  restartTimer();
 
   var unstaked = switchtostaked ? staked : unstaked;
   console.log(unstaked);
@@ -1255,23 +1202,24 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
     document.getElementById("sidebar").style.visibility = "visible";
     document.getElementById("sidebar-right").style.visibility = "visible";
     return;
-  } else if (unstaked.length > 0) {
+  }
+  else if (unstaked.length > 0){
     let found = false;
-    for (const data of unstaked) {
-      if (main_view_type == "Machine" && data.name.includes("Cutter")) check = true;
-      if (data.name.includes(main_view_type) || check) {
-        found = true;
-        break;
+      for(const data of unstaked){
+        if (main_view_type == "Machine" && data.name.includes("Cutter")) check = true;
+        if(data.name.includes(main_view_type) || check){
+          found = true;
+          break;
+        }
       }
-    }
-    if (!found) {
-      loader.display = "none";
-      ShowToast("No Assets To Display !");
-      document.getElementById("footer").style.visibility = "visible";
-      document.getElementById("sidebar").style.visibility = "visible";
-      document.getElementById("sidebar-right").style.visibility = "visible";
-      return;
-    }
+      if(!found){
+        loader.display = "none";
+        ShowToast("No Assets To Display !");
+        document.getElementById("footer").style.visibility = "visible";
+        document.getElementById("sidebar").style.visibility = "visible";
+        document.getElementById("sidebar-right").style.visibility = "visible";
+        return;
+      }
   }
 
   document.getElementById("scrolldiv").style.justifyContent = "flex-start";
@@ -1318,7 +1266,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
           div2.textContent = "Factory # " + factory + " ( " + unstaked[index].asset_id + " )";
           img2.onclick = async function () {
             ShowToast("Selected Factory #" + asset_id);
-            PopulateFactory(data, labourerData)
+            PopulateFactory(data,labourerData)
           };
 
           const utcMilllisecondsSinceEpoch = Date.now();
@@ -1327,11 +1275,12 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
 
           var timer_div = document.createElement('p');
           timer_div.disabled = "disabled";
-          timer_div.id = "timer " + unstaked[index].asset_id;
+          timer_div.id = "timer" + unstaked[index].asset_id;
           timer_div.className = 'textstyle textstyle15';
           container.appendChild(timer_div);
           startTimer(tr, timer_div.id);
-        } else {
+        }
+        else{
           div2.textContent = "Factory " + " ( " + unstaked[index].asset_id + " )";
           img2.onclick = async function () {
             ShowToast("Please Stake this Factory First !");
@@ -1403,9 +1352,11 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
 
         let div_container_1 = document.createElement('div');
         div_container_1.className = "flex-container";
+        div_container_1.style = "margin-left: 8px;";
 
         let div_container_2 = document.createElement('div');
-        div_container_2.className = "flex-container_2";
+        div_container_2.className = "flex-container";
+        div_container_2.style = "align-items:center;margin-right: 8px;";
 
         var div2 = document.createElement('p');
         div2.textContent = "#" + unstaked[index].asset_id;
@@ -1426,7 +1377,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
         div3.className = 'textstyle textstyle16';
         div3.id = 'textstyle';
         div3.textContent = unstaked[index].name;
-
+        
         title_bar.appendChild(div3_2);
         title_bar.appendChild(div3);
         div_container_1.appendChild(title_bar);
@@ -1440,7 +1391,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
         div4.className = 'textstyle';
         div4.id = 'textstyle';
         div4.style = "color:#D9490D;font-size:20px;margin-top:5px;";
-        switch (unstaked[index].material_type) {
+        switch(unstaked[index].material_type){
           case "Rubber":
             div4.textContent = "NKFR / Rubber";
             break;
@@ -1462,7 +1413,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
           text_div.style = "display:flex;flex-direction:colum;justify-content:center;align-items:center;width:100%;height:50px;background:black;border-radius:8px;";
           var timer_div = document.createElement('p');
           timer_div.disabled = "disabled";
-          timer_div.id = "timer 3" + unstaked[index].asset_id;
+          timer_div.id = "timer " + unstaked[index].asset_id;
           timer_div.textContent = "Time to claim : 00 : 00 : 00";
           timer_div.className = 'textstyle textstyle15';
           text_div.appendChild(timer_div);
@@ -1480,7 +1431,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
             div5.className = 'textstyle';
             var div6 = document.createElement('div');
             div6.id = 'textstyle';
-            div6.style = "font-size:15px";
+            div6.style = "font-size:13px";
             div6.textContent = parseFloat(unstaked[index].nrgstorage.split(' ')[0]).toFixed(0) + " / " + parseFloat(unstaked[index].maxstorage.split(' ')[0]).toFixed(0) + " " + unstaked[index].maxstorage.split(' ')[1];
             div6.className = 'textstyle';
 
@@ -1530,7 +1481,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
             var div7 = document.createElement('div');
             div7.id = 'textstyle';
             var txt = unstaked[index].token_in.includes("X") ? "" : '\n' + unstaked[index].token_in;
-            div7.textContent = "Power : + " + parseFloat(unstaked[index].power.split(' ')[0]).toFixed(0).toString() + " " + unstaked[index].power.split(' ')[1];
+            div7.textContent = "Power : + " + unstaked[index].power;
             div7.className = 'textstyle textstyle15';
 
             var power_prod_bar = document.createElement('div');
@@ -1539,7 +1490,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
 
             var text_div = document.createElement('div');
             var txt = unstaked[index].token_in.includes("X") ? "" : '\n' + unstaked[index].token_in;
-            text_div.textContent = "Production : " + parseFloat(txt.split(' ')[0]).toFixed(0).toString() + " " + txt.split(' ')[1] + " / H";
+            text_div.textContent = "Production : " + txt + " / H";
             text_div.className = 'textstyle textstyle15';
             //text_div.style = "margin-bottom:-5px;";
 
@@ -1572,8 +1523,8 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
               labourer_div.appendChild(new_bar);
             } else {
 
-              for (const labouerData of labourers) {
-                if (labouerData.asset_id == unstaked[index].labourer_id) {
+              for(const labouerData of labourers){
+                if(labouerData.asset_id == unstaked[index].labourer_id){
 
                   var labr_title_bar = document.createElement('div');
                   labr_title_bar.className = "bar";
@@ -1596,11 +1547,11 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
 
                   let labr_div = document.createElement('div');
                   labr_div.className = "labr_div";
-
+                  
 
                   let labr_subdiv_type1 = document.createElement('div');
                   labr_subdiv_type1.style = "width:50%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;";
-
+                  
                   let boost_text = document.createElement('p');
                   boost_text.className = "textstyle";
                   boost_text.style = "font-size:12px;";
@@ -1629,7 +1580,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
                 }
               }
 
-              div9.textContent = '#' + unstaked[index].labourer_id;
+              div9.textContent = '#'+unstaked[index].labourer_id;
               div9.style.fontSize = "15px";
 
               var new_div = document.createElement('BUTTON');
@@ -1646,7 +1597,8 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
             }
             div_container_2.appendChild(labourer_div);
           }
-        } else {
+        }
+        else{
           var bar_2 = document.createElement('div');
           bar_2.className = "bar";
 
@@ -1737,17 +1689,21 @@ function getkeybalance(balance_static, symbol) {
   return "0.0000 " + symbol;
 }
 
-function dropdown_content() {
-  if(document.getElementById("bank-dropdown_content").style.display == "block")
-    document.getElementById("bank-dropdown_content").style.display == "none";
-  else 
-    document.getElementById("bank-dropdown_content").style.display == "block"
+function dropdown_content(){
+  console.log("in");
+  if(!dropdown_clicked){
+    document.getElementById("bank-dropdown").style.display = "block";
+    dropdown_clicked = true;
+  }
+  else{
+    document.getElementById("bank-dropdown").style.display = "none";
+    dropdown_clicked = false;
+  }
 }
 
 function bank_select(symbol) {
   dropdown_content();
   ShowToast("Selected Token " + symbol);
-  document.getElementById("bank_dropdown").value = symbol;
   selected_token_bank = symbol;
   var user_balance = document.getElementById("user_balance");
   var wax_balance = document.getElementById("wax_balance");
@@ -1758,15 +1714,7 @@ function bank_select(symbol) {
   final_amt.value = "Final Withdraw Amount : " + final_amount + " " + selected_token_bank;
 }
 
-async function show_api(){
-  if(document.getElementById("api_dropdown_content").style.display == "block")
-    document.getElementById("api_dropdown_content").style.display = "none";
-  else 
-    document.getElementById("api_dropdown_content").style.display = "block";
-} 
-
 const select_api = async (api) => {
-  show_api();
   endpoint = "https://" + api;
   document.getElementById("api_dropdown").value = endpoint;
 }
@@ -1777,6 +1725,40 @@ async function switch_to_bank() {
     craft_index = 'false';
     deposit_index = 'false';
     labour_index = 'false';
+    switch_to_craft();
+    switch_to_deposit();
+    switch_to_labourers();
+    ShowToast("Please Select Token Type to Proceed");
+    document.getElementById('bank').style.visibility = "visible";
+    document.getElementById('bank-child').style.visibility = "visible";
+    document.getElementById('bank-header').style.display = "block";
+    var element = document.getElementById('bank-child');
+    var children = element.children;
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      child.style.visibility = "visible";
+    }
+    bank_index = 'false';
+  } else if (bank_index == 'false') {
+    document.getElementById('bank').style.visibility = "hidden";
+    document.getElementById('bank-child').style.visibility = "hidden";
+    document.getElementById('bank-header').style.display = "none";
+    var element = document.getElementById('bank-child');
+    var children = element.children;
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      child.style.visibility = "hidden";
+    }
+    bank_index = 'true';
+    craft_index = 'true';
+    deposit_index = 'true';
+    labour_index = 'true';
+  }
+}
+
+async function switch_to_bank() {
+
+  if (bank_index == 'true') {
     switch_to_craft();
     switch_to_deposit();
     switch_to_labourers();
@@ -1831,16 +1813,11 @@ async function switch_to_deposit(asset_id, max) {
     var element = document.getElementById('dmchid');
     element.value = "Machine Asset ID : #" + asset_id;
     var depositmchbtn = document.getElementById('depositmchbtn');
-    var withdrawbtn = document.getElementById('withdrawmchbtn');
     depositmchbtn.onclick =
       async function () {
-        var output = document.getElementById("demo").innerHTML + " NKFE";
-        deposit(asset_id, output);
+        var output = document.getElementById("demo");
+        deposit(asset_id, output.innerHTML);
       }
-    withdrawbtn.onclick = async function () {
-      var output = document.getElementById("demo").innerHTML + " NKFE";
-      withdraw_tokens(output,asset_id);
-    }
 
     deposit_index = 'false';
   } else if (deposit_index == 'false') {
@@ -1858,7 +1835,7 @@ async function switch_to_deposit(asset_id, max) {
   }
 }
 async function populate_lpanel(asset_idd, name, labourerz, rarity) {
-
+  
   var element1 = document.getElementById('lmchild');
   element1.value = "Selected Machine : #" + asset_idd + " | " + name;
 
@@ -1873,69 +1850,60 @@ async function populate_lpanel(asset_idd, name, labourerz, rarity) {
     }
   }
 
-  if(labourerz.length < 1){
-    ShowToast("No Labourers To Display !");
-    return;
-  }
-
   for (var index = 0; index < unstaked.length; ++index) {
 
-    if (!unstaked[index].staked) {
-      var items = document.createElement('div');
-      items.id = index + "l";
-      var div = document.createElement('div');
-      div.id = "tablecontainer";
-      div.style = "margin-bottom:30px;background:transparent;border:none";
-      items.className = "itemwrapper";
+    var items = document.createElement('div');
+    items.id = index + "l";
+    var div = document.createElement('div');
+    div.id = "tablecontainer";
+    div.style = "margin-bottom:30px;background:transparent;border:none";
+    items.className = "itemwrapper";
 
-      img2 = document.createElement('img');
-      img2.src = src + unstaked[index].img;
-      img2.className = 'labr_panel_img';
-      items.appendChild(img2);
+    img2 = document.createElement('img');
+    img2.src = src + unstaked[index].img;
+    img2.className = 'labr_panel_img';
+    items.appendChild(img2);
 
-      var div2 = document.createElement('p');
-      div2.textContent = "# " + unstaked[index].asset_id;
-      div2.className = 'textstyle textstyle15';
-      items.appendChild(div2);
+    var div2 = document.createElement('p');
+    div2.textContent = "# "+unstaked[index].asset_id;
+    div2.className = 'textstyle textstyle15';
+    items.appendChild(div2);
 
-      var div3 = document.createElement('div');
-      div3.id = 'textstyle';
-      div3.textContent = unstaked[index].name;
-      div3.className = 'textstyle';
-      div3.style.textDecoration = 'underline';
-      items.appendChild(div3);
+    var div3 = document.createElement('div');
+    div3.id = 'textstyle';
+    div3.textContent = unstaked[index].name;
+    div3.className = 'textstyle';
+    div3.style.textDecoration = 'underline';
+    items.appendChild(div3);
 
-      var power = "0.00";
-      unstaked[index].boostdata.forEach(x => {
-        if (x.rarity == rarity)
-          power = x.boost;
-      });
+    var power = "0.00";
+    unstaked[index].boostdata.forEach(x => {
+      if (x.rarity == rarity)
+        power = x.boost;
+    });
 
-      var div5 = document.createElement('div');
-      div5.id = 'textstyle';
-      div5.textContent = "Boost : + " + power;
-      div5.className = 'textstyle';
-      items.appendChild(div5);
+    var div5 = document.createElement('div');
+    div5.id = 'textstyle';
+    div5.textContent = "Boost : + " + power;
+    div5.className = 'textstyle';
+    items.appendChild(div5);
 
-      var new_bar = document.createElement('div');
-      new_bar.className = 'bar';
-      new_bar.style.height = "25px";
-      let new_div = document.createElement('BUTTON');
-      new_div.id = unstaked[index].asset_id;
-      new_div.mch = asset_idd;
-      new_div.className = "addBtn";
-      new_div.onclick = async function s() {
-        regboost(new_div.id, new_div.mch);
-      };
-      new_bar.appendChild(new_div);
+    var new_bar = document.createElement('div');
+    new_bar.className = 'bar';
+    new_bar.style.height = "25px";
+    let new_div = document.createElement('BUTTON');
+    new_div.id = unstaked[index].asset_id;
+    new_div.mch = asset_idd;
+    new_div.className = "addBtn";
+    new_div.onclick = async function s() {
+      regboost(new_div.id, new_div.mch);
+    };
+    new_bar.appendChild(new_div);
 
-      items.appendChild(new_bar);
-      div.appendChild(items);
-      element2.appendChild(div);
-    }
+    items.appendChild(new_bar);
+    div.appendChild(items);
+    element2.appendChild(div);
   }
-  if(element2.children.length < 1)
-    ShowToast("All Labourers Already Staked !");
 }
 async function switch_to_labourers() {
   if (labour_index == 'true') {
@@ -1992,9 +1960,6 @@ async function switch_to_craft() {
 }
 
 async function clearUi() {
-  for(const ids of interval_ids){
-    clearInterval(ids);
-  }
   start_timer = false;
   reg_dereg = false;
   document.getElementById('staking').style.display = "none";
@@ -2126,7 +2091,6 @@ async function ShowToast(message) {
 async function autoLogin() {
   var isAutoLoginAvailable = await wallet_isAutoLoginAvailable();
   if (isAutoLoginAvailable) {
-    document.getElementById("login_title").style.visibility = "hidden";
     login();
   }
 }
@@ -2135,17 +2099,8 @@ async function selectWallet(walletType) {
   login();
 }
 async function logout() {
-  await wallet_logout();
-  location.reload();
-  /*clearUi();
-  if(bank_index == "false")
-    switch_to_bank();
-  if(craft_index == "false")
-    switch_to_craft();
-  if(labour_index == "false")
-    switch_to_labourers();
-  if(deposit_index == "false")
-    switch_to_deposit();
+  wallet_logout();
+  clearUi();
   document.getElementById("loggedin").style.display = "none";
   document.getElementById("loggedout").style.display = "block";
   document.getElementById('staking').style.display = "none";
@@ -2157,7 +2112,7 @@ async function logout() {
   document.getElementById("username").value = "";
   document.getElementById("api_dropdown").value = "RPC Endpoints Available <>";
   loggedIn = false;
-  HideMessage();*/
+  HideMessage();
 }
 async function login() {
   try {
@@ -2197,22 +2152,22 @@ async function wallet_selectWallet(walletType) {
 }
 async function wallet_login() {
   if (useAnchor) {
-    var sessionList = await anchorLink.listSessions(dapp);
+    /*var sessionList = await anchorLink.listSessions(dapp);
     if (sessionList && sessionList.length > 0) {
       wallet_session = await anchorLink.restoreSession(dapp);
     } else {
       wallet_session = (await anchorLink.login(dapp)).session;
-    }
-    wallet_userAccount = String(wallet_session.auth).split("@")[0];
-    auth = String(wallet_session.auth).split("@")[1];
-    anchorAuth = auth;
+    }*/
+    wallet_userAccount = "uhmmk.c.wam"; //String(wallet_session.auth).split("@")[0];
+    //auth = String(wallet_session.auth).split("@")[1];
+    //anchorAuth = auth;
 
   } else {
     wallet_userAccount = await wax.login();
     wallet_session = wax.api;
     anchorAuth = "active";
   }
-  return wallet_userAccount;
+  return "uhmmk.c.wam"; //wallet_userAccount;
 }
 async function wallet_logout() {
   if (useAnchor) {

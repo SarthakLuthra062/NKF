@@ -21,7 +21,7 @@ html {
         overflow: scroll;
         overflow-y:hidden;
         overflow-x: hidden;
-        height: 100vh;
+        height: 100%;
     }
 
     .divider{
@@ -312,7 +312,7 @@ html {
     .scrolldiv{
         border: 5px solid white;
         background: rgba(0,0,0,0.4);
-        width: 75%;
+        width: 75vw;
         height: 62vh;
         display:flex;
         flex-direction: row;
@@ -610,6 +610,7 @@ html {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        width: 100%;
     }
 
     .flex-container{
@@ -617,9 +618,21 @@ html {
         flex-direction: column;
         align-items:flex-start;
         justify-content: flex-start;
-        height: 100%;
-        width: 50%;
+        height: 98%;
+        width: 48%;
         gap: 5px;
+        margin-left: 10px;
+    }
+
+    .flex-container_2{
+        display: flex;
+        flex-direction: column;
+        align-items:flex-start;
+        justify-content: flex-start;
+        height: 98%;
+        width: 48%;
+        gap: 5px;
+        margin-right: 10px;
     }
 
     .itemwrapper {
@@ -647,14 +660,13 @@ html {
         align-items: center;
         align-content: center;
         height: 100%;
-        width: 385px;
+        width: 390px;
         font: 16px/26px Georgia, Garamond, Serif;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
         color: white;
-        gap: 8px;
     }
 
     .itemwrapper_3 {
@@ -735,20 +747,22 @@ html {
 
     .footer_input{
         background: transparent;
-        position: absolute;
         border: none;
+        display: block;
+        float: right;
+        margin-right: 11%;
         width: 100%;
-        height: 100%;
+        height: 80%;
         color: white;
-        margin-left: 4.5vw;
+        text-align: end;
         font-weight: bold;
+        font-size: 0.9vw;
     }
 
     .footer-btn{
-        width: 200px;
-        height: 45px;
+        width: 13.5vw;
+        height: 8vh;
         color: white;
-        font-family: 15px;
         background-size: 100%;
         background-repeat: no-repeat;
     }
@@ -844,8 +858,8 @@ html {
     }
 
     .nftimg {
-        width: auto;
-        height: 65%;
+        width: 95%;
+        height: auto;
         background-size: 100%;
         background-repeat: no-repeat;
     }
@@ -1503,6 +1517,7 @@ html {
 
     .nav-container{
         width: 100%;
+        height: 8vh;
     }
 
     .side-items{
@@ -1514,8 +1529,8 @@ html {
     }
 
     .logoimg{
-        width: 35vw;
-        height: 15vh;
+        width: 70px;
+        height: 65px;
     }
 
     .btn{
@@ -1552,7 +1567,7 @@ html {
 
     .maindiv{
         gap:15px;
-        margin-top: 17.5vh;
+        margin-top: 16vh;
     }
 
     .header_username{
@@ -1586,11 +1601,12 @@ html {
 
     .itemwrapper_2 {
         align-items: center;
-        width: 80vw;
+        width: 85vw;
         flex-direction: row;
         align-items: center;
         justify-content: center;
         height: 100%;
+        gap: 5px;
     }
 
     .itemwrapper_3 {
@@ -1631,6 +1647,7 @@ html {
 
     body{
         overflow: hidden;
+        height: 101vh;
     }
 
     .loginTitle{
@@ -1646,16 +1663,10 @@ html {
         background-size: 100%;
     }
 
-    .header-container{
-        width: 100vw;
-        height: 80vh;
-    }
-
     .main-content{
         margin-top: 0px;
-        left: 0;
         width: 100vw;
-        height: 80vh;
+        height: 90vh;
     }
 
     #walletlist {
@@ -1682,7 +1693,6 @@ html {
 
     .sidebar{
         margin-left: 0px;
-        margin-top: 5vh;
         width: 100vw;
         height: 40px;
         flex-direction: row;
@@ -1696,7 +1706,7 @@ html {
     .sidebar-right{
         margin-left: 0px;
         margin-right: 0px;
-        margin-top: 12vh;
+        margin-top: 8.5vh;
         width: 100vw;
         height: 40px;
         flex-direction: row;
@@ -1714,22 +1724,21 @@ html {
     }
 
     .factory-header{
-        margin-top: 10px;
         color: white;
         border: 3px solid #D9490D;
         border-radius: 5px;
-        width: 40vw;
-        height: 40px;
+        width: 33vw;
+        height: 35px;
         background: rgba(0,0,0,0.3);
         font-weight: bold;
-        font-size: 18px;
+        font-size: 15px;
         font-family: oswald;
         letter-spacing: 5px;
     }
 
     .scrolldiv{
         width: 90vw;
-        height: 48vh;
+        height: 44vh;
         display:flex;
         flex-direction: column;
         justify-content: center;
@@ -1739,6 +1748,7 @@ html {
         overflow: scroll;
         overflow-x: hidden;
         overflow-y: visible;
+        gap:10px;
     }
 
     .factory_img{
@@ -1773,10 +1783,11 @@ html {
     }
 
     .container_style_header{
-        margin-top: 10vh;
-        width: 100vw;
+        margin-top: 4.5vh;
+        width: 100%;
         height: 35px;
     }
+
 
     .divider{
         display: none
@@ -1825,13 +1836,14 @@ html {
         height: 5vh;
         margin-left: 11vw;
         text-align: center;
+        border: 1px solid white;
     }
 
     .footer-btn{
-        width: 45%;
-        height: 100%;
+        width: 45vw;
+        height: 95%;
         color: white;
-        font-family: 12px;
+        font-size: 12px;
         background-size: 100%;
         background-repeat: no-repeat;
     }
@@ -1875,8 +1887,7 @@ html {
     }
 
     .pp_bar{
-        width: 100%;
-        height: 65px;
+        height: 50px;
     }
 
     .bar {
@@ -1936,7 +1947,23 @@ html {
         width: 80%;
         height: 15px;
         margin-bottom: 20px; 
-      }
+    }
+
+    .loginbtn{
+        margin-top: 0px;
+        width: 60px;
+        height: 25px;
+    }
+
+    .flex-container{
+        display: flex;
+        flex-direction: column;
+        align-items:flex-start;
+        justify-content: flex-start;
+        height: 100%;
+        width: 50%;
+        gap: 5px;
+    }
 
 }
 
