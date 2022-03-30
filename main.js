@@ -1070,7 +1070,7 @@ async function PopulateFactory(data, labourers) {
     labourer_div.style = "margin-top:10px;";
 
     var new_bar = document.createElement('div');
-    new_bar.className = 'bar_type2';
+    new_bar.className = 'bar_type5';
     var div9 = document.createElement('div');
     div9.className = 'flex-textstyle';
 
@@ -1094,7 +1094,7 @@ async function PopulateFactory(data, labourers) {
 
   } else {
 
-    div.id = "tablecontainer";
+    div.id = "tablecontainer_type2";
     items.className = "itemwrapper";
 
     var title_bar_3 = document.createElement('div');
@@ -1109,6 +1109,7 @@ async function PopulateFactory(data, labourers) {
       await clearUi();
       PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, balance);
     };
+
     title_bar_3.appendChild(close_div);
     items.appendChild(title_bar_3);
 
@@ -1144,7 +1145,8 @@ async function PopulateFactory(data, labourers) {
     bar_3.style = "justify-content:center;height:80px;";
 
     var storage_div = document.createElement('div');
-    storage_div.style = "background:rgba(255,255,255,0.1);border-radius:8px;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;width:80%;border:1px solid white;margin-top:5px;";
+    storage_div.className = "storage_div";
+    storage_div.style.width = "70%";
 
     var div5 = document.createElement('div');
     div5.id = 'textstyle';
@@ -1196,18 +1198,17 @@ async function PopulateFactory(data, labourers) {
     items.appendChild(bar_2);
 
     var bar_5 = document.createElement('div');
-    bar_5.className = "bar_type2";
+    bar_5.className = "bar_type4";
 
     var labourer_div = document.createElement('div');
-    labourer_div.className = "labourer_div";
-    labourer_div.style = "height:100%;width:80%;";
+    labourer_div.className = "labourer_div_type2";
 
     var new_bar = document.createElement('div');
-    new_bar.className = 'bar_type2';
+    new_bar.className = 'bar_type6';
     var div9 = document.createElement('div');
     div9.className = 'flex-textstyle';
 
-    div9.textContent = 'Add Labourer ';
+    div9.textContent = 'Add Labourer';
     let new_div = document.createElement('BUTTON');
     new_div.id = data.asset_id;
     new_div.className = "addBtn";
