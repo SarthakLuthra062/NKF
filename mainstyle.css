@@ -1678,7 +1678,7 @@ html {
     }
 
     body{
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: hidden;
         height: 101vh;
         z-index: 0;
