@@ -1533,7 +1533,7 @@ function PopulateMenu(rates, craftdata, boostdata, labourers, staked, unstaked, 
             var div7 = document.createElement('div');
             div7.id = 'textstyle';
             var txt = unstaked[index].token_in.includes("X") ? "" : '\n' + unstaked[index].token_in;
-            div7.textContent = "Production : + " + parseFloat(unstaked[index].power.split(' ')[0]).toFixed(0).toString() + " " + unstaked[index].power.split(' ')[1];
+            div7.textContent = "Production : + " + parseFloat(unstaked[index].power.split(' ')[0]).toFixed(0).toString() + " " + unstaked[index].power.split(' ')[1] + " / H";
             div7.className = 'textstyle textstyle15';
 
             var power_prod_bar = document.createElement('div');
