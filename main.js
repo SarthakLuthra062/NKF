@@ -1756,9 +1756,9 @@ function getkeybalance(balance_static, symbol) {
 
 function dropdown_content() {
   if(document.getElementById("bank-dropdown_content").style.display == "block")
-    document.getElementById("bank-dropdown_content").style.display == "none";
+    document.getElementById("bank-dropdown_content").style.display = "none";
   else 
-    document.getElementById("bank-dropdown_content").style.display == "block"
+    document.getElementById("bank-dropdown_content").style.display = "block"
 }
 
 function bank_select(symbol) {
